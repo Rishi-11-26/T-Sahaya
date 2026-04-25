@@ -1,36 +1,116 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# T-Sahaya — Telangana Schemes Portal
 
-## Getting Started
+> **"Sahaya" means Help in Telugu.**
+> T-Sahaya is an AI-powered government scheme eligibility platform built exclusively for the citizens of Telangana, India. It provides instant, accurate, multilingual guidance on 14+ state welfare schemes — no internet required, no API costs, no crashes.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Why T-Sahaya?
+
+Millions of eligible Telangana citizens miss out on government welfare schemes simply because they don't know about them or how to apply. Uneducated and rural citizens face even higher barriers — spelling errors, language gaps, and complex procedures block access to their rightful benefits.
+
+T-Sahaya solves this by providing:
+
+- ✅ **Instant Eligibility Analysis** — Select a scheme, enter your age and income; our local Smart Engine checks real eligibility rules instantly.
+- ✅ **Strict Age Validation** — Every scheme has official minimum/maximum age rules that are verified against your input. If you don't qualify, you are told clearly — no false hopes.
+- ✅ **14+ Telangana Schemes** — Agriculture, health, education, housing, marriage, pensions, maternity, handlooms, and more.
+- ✅ **Clear Actionable Steps** — Step-by-step application instructions, not vague summaries.
+- ✅ **3-Language Full UI** — The entire interface (labels, buttons, results) switches to English, Hindi, or Telugu instantly.
+- ✅ **Zero API Dependencies** — Works completely offline with a hardcoded local Smart Engine. No rate limits, no quota errors, no crashes during demos.
+- ✅ **Auto-Updating Eligibility Rules** — A GitHub Actions pipeline runs daily, scraping official scheme portals and automatically updating age/income limits if the government changes them.
+
+---
+
+## Supported Schemes
+
+| Scheme | Category | Age Eligibility |
+|---|---|---|
+| Maha Lakshmi Scheme | Women / Free Bus | 18+ |
+| Rythu Bharosa / Rythu Bandhu | Agriculture | 18+ |
+| Gruha Jyothi Scheme | Free Electricity (200 units) | 18+ |
+| Telangana ePASS | Scholarships (Inter, B.Tech, Degree, PG) | 16 – 35 |
+| Aasara Pensions | Elderly / Widow / Disability | 18+ (Old Age: 57+) |
+| Kalyana Lakshmi / Shaadi Mubarak | Marriage Assistance | Bride 18+, Groom 21+ |
+| Rajiv Aarogyasri | Health Insurance | All ages |
+| Telangana Dalit Bandhu | Dalit Empowerment (₹10 Lakhs) | 18+ |
+| KCR Kit / Amma Vodi | Maternity Support | 18 – 45 |
+| Indiramma Indlu | Housing Scheme | 18+ |
+| Kanti Velugu | Free Eye Checkups & Surgeries | All ages |
+| CM Overseas Scholarship | Study Abroad for Minorities | 18 – 35 |
+| Golla Kuruma Sheep Distribution | Livestock / Rural Economy | 18+ |
+| Nethannaku Cheyutha | Handloom Weavers Saving Scheme | 18+ |
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 15 (App Router) |
+| Language | TypeScript |
+| Styling | Tailwind CSS |
+| Animations | Framer Motion |
+| Icons | Lucide React |
+| AI Engine | Local Telangana Smart Engine (zero external API) |
+| Automation | Python + BeautifulSoup + GitHub Actions |
+
+---
+
+## Project Structure
+
+```
+├── src/
+│   ├── app/
+│   │   ├── api/
+│   │   │   └── orchestrate/
+│   │   │       └── route.ts          # Local Smart Engine — reads from schemes_eligibility.json at runtime
+│   │   ├── page.tsx                  # Main UI with full i18n translation (EN / HI / TE)
+│   │   ├── layout.tsx                # App layout & SEO metadata
+│   │   └── globals.css               # Global styles
+│   └── components/
+│       └── LogStream.tsx             # Live agent streaming log component
+│
+├── public/
+│   └── data.json                     # Auto-updated: portal news + services (daily scrape)
+│
+├── schemes_eligibility.json          # Auto-updated: official age/income rules per scheme (daily scrape)
+├── scout_agent.py                    # Python scraper: scrapes portal + scheme pages, updates both JSONs
+│
+└── .github/
+    └── workflows/
+        └── update_data.yml           # GitHub Actions: runs scout_agent.py daily at 00:00 UTC
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## How the Auto-Update Pipeline Works
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Every day at midnight UTC, the GitHub Actions pipeline runs automatically:
 
-## Learn More
+```
+scout_agent.py
+   │
+   ├─► Scrapes telangana.gov.in for latest news & services
+   │         → Updates public/data.json
+   │
+   └─► Visits each scheme's official portal
+             (aarogyasri.telangana.gov.in, kalyanalakshmi.telangana.gov.in, etc.)
+             → Extracts updated age/income eligibility numbers via regex
+             → Updates schemes_eligibility.json
 
-To learn more about Next.js, take a look at the following resources:
+If anything changed:
+   └─► Auto-commits both files: "Automated Govt Data Sync [Skip CI]"
+             → Vercel detects commit → auto-redeploys
+             → route.ts reads new values at next request ✅
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+> **Safety:** If a government website is unreachable, the scraper keeps the existing known-good value. It never writes incorrect data.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## Built For
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This project was built for the citizens of **Telangana, India** to improve government service delivery and accessibility.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+*Made with ❤️ for the people of Telangana.*
