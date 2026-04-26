@@ -379,18 +379,34 @@ export async function POST(req: NextRequest) {
         await new Promise((r) => setTimeout(r, 600));
 
         // ── Income Validation ──
-        let isIncomeEligible = userIncome <= schemeEligibilityLimit;
-        if (matchedScheme.id === "dalit_bandhu") isIncomeEligible = true;
+        let isIncomeEligible = true;
+        let incomeRejectionMsg = "";
 
-        let incomeLog = "";
         if (userIncome === 0) {
-          incomeLog = `Income not entered. Proceeding with analysis for ${matchedScheme.name}.`;
-        } else if (isIncomeEligible) {
-            incomeLog = `Income check PASSED: ₹${userIncome.toLocaleString('en-IN')} is within the threshold for ${matchedScheme.name}.`;
-        } else {
-            incomeLog = `Income check WARNING: ₹${userIncome.toLocaleString('en-IN')} may exceed the standard eligibility threshold for ${matchedScheme.name}. Verify with local MRO office.`;
+          isIncomeEligible = false;
+        } else if (schemeEligibilityLimit < 9999999 && userIncome > schemeEligibilityLimit) {
+          isIncomeEligible = false;
+          incomeRejectionMsg = `Income check FAILED: Your annual income of ₹${userIncome.toLocaleString('en-IN')} exceeds the eligibility limit of ₹${schemeEligibilityLimit.toLocaleString('en-IN')} for this scheme.`;
         }
-        sendLog("agent-2-income", "Eligibility Auditor", incomeLog, isIncomeEligible ? "success" : "warning");
+
+        if (!isIncomeEligible && userIncome !== 0) {
+          // Hard block — income is definitively out of range
+          sendLog("agent-2-done", "Eligibility Auditor", incomeRejectionMsg, "error");
+          sendResult([
+            `❌ NOT ELIGIBLE: ${incomeRejectionMsg}`,
+            `ℹ️ Official Rule: Annual income must be ₹${schemeEligibilityLimit.toLocaleString('en-IN')} or below.`,
+            `💡 Tip: Check other schemes in the dropdown that may not have this income limit.`
+          ]);
+          controller.close();
+          return;
+        }
+
+        if (!isIncomeEligible && userIncome === 0) {
+          sendLog("agent-2-warn", "Eligibility Auditor", "Income not entered. Please enter your annual income for an accurate eligibility check.", "warning");
+        } else {
+          sendLog("agent-2-income", "Eligibility Auditor", `Income check PASSED: ₹${userIncome.toLocaleString('en-IN')} is within the threshold for ${matchedScheme.name}.`, "success");
+        }
+
         await new Promise((r) => setTimeout(r, 800));
 
         // Red Teamer
@@ -427,3 +443,4 @@ export async function POST(req: NextRequest) {
     },
   });
 }
+
