@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Search, ShieldCheck, FileText, ArrowRight, Activity, RefreshCw } from "lucide-react";
+import { Search, ShieldCheck, FileText, ArrowRight, Activity, RefreshCw, Info, AlertTriangle } from "lucide-react";
 import LogStream, { LogMessage } from "@/components/LogStream";
 type Lang = "English" | "Hindi" | "Telugu";
 
@@ -141,24 +141,54 @@ export default function Home() {
   // Removed unused DocumentUpload handler
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-blue-500/30">
-      <div className="max-w-4xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
-        
-        {/* Header */}
-        <div className="text-center mb-12">
+    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-blue-500/30 flex flex-col">
+
+      {/* ═══════ HERO SECTION ═══════ */}
+      <section id="hero" className="relative overflow-hidden">
+        {/* Subtle gradient backdrop */}
+        <div className="absolute inset-0 bg-gradient-to-b from-blue-950/40 via-slate-950 to-slate-950 pointer-events-none" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-blue-500/[0.07] rounded-full blur-[120px] pointer-events-none" />
+
+        <div className="relative max-w-4xl mx-auto px-4 pt-16 pb-10 sm:px-6 lg:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             className="inline-flex items-center justify-center p-3 mb-6 bg-blue-500/10 rounded-2xl ring-1 ring-blue-500/20"
           >
             <ShieldCheck className="w-8 h-8 text-blue-400 mr-2" />
-            <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">T-Sahaya</h1>
+            <span className="text-2xl font-bold tracking-tight text-white sm:text-3xl">T-Sahaya</span>
           </motion.div>
-          <p className="text-lg text-slate-400 max-w-2xl mx-auto">
-            {t.subtitle}
-          </p>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight tracking-tight text-white max-w-3xl mx-auto"
+          >
+            Find Telangana Government Services in Seconds&mdash;
+            <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent"> all in one place.</span>
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="mt-4 text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto"
+          >
+            No confusion, no waiting.
+          </motion.p>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.35 }}
+            className="mt-3 text-sm text-slate-500 tracking-wide"
+          >
+            Built for Telangana citizens
+          </motion.p>
+
           {lastVerified && (
-            <div className="inline-flex items-center gap-1.5 mt-4 px-3 py-1 bg-green-500/10 border border-green-500/20 rounded-full">
+            <div className="inline-flex items-center gap-1.5 mt-5 px-3 py-1 bg-green-500/10 border border-green-500/20 rounded-full">
               <RefreshCw className="w-3 h-3 text-green-400" />
               <span className="text-xs text-green-400 font-medium">
                 Last Verified: {lastVerified} IST
@@ -166,6 +196,10 @@ export default function Home() {
             </div>
           )}
         </div>
+      </section>
+
+      {/* ═══════ MAIN CONTENT ═══════ */}
+      <div className="flex-1 max-w-4xl mx-auto w-full px-4 pb-12 sm:px-6 lg:px-8">
 
         {/* Main Grid */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
@@ -297,6 +331,64 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {/* ═══════ ABOUT / TRUST SECTION ═══════ */}
+      <section id="about" className="max-w-4xl mx-auto w-full px-4 pt-10 pb-14 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="bg-slate-900/70 border border-slate-800 rounded-2xl p-6 sm:p-8"
+        >
+          <h2 className="text-xl font-semibold text-white flex items-center gap-2 mb-4">
+            <Info className="w-5 h-5 text-blue-400" />
+            About This Website
+          </h2>
+          <p className="text-slate-400 leading-relaxed text-[15px]">
+            This is a free, independent tool created to help Telangana citizens easily find government services. We are not affiliated with any government authority.
+          </p>
+          <p className="mt-3 text-slate-500 text-sm italic">
+            Always verify details on official government websites.
+          </p>
+        </motion.div>
+      </section>
+
+      {/* ═══════ FOOTER ═══════ */}
+      <footer className="border-t border-slate-800 bg-slate-950">
+        <div className="max-w-4xl mx-auto px-4 py-10 sm:px-6 lg:px-8 text-center space-y-5">
+          {/* Brand */}
+          <div className="flex items-center justify-center gap-2">
+            <ShieldCheck className="w-5 h-5 text-blue-400" />
+            <span className="text-lg font-bold text-white tracking-tight">T-Sahaya</span>
+            <span className="text-slate-500 text-sm hidden sm:inline">— Telangana Services Navigator</span>
+          </div>
+          <p className="text-slate-500 text-sm max-w-md mx-auto">
+            Helping citizens quickly find government services without confusion.
+          </p>
+
+          {/* Disclaimer */}
+          <div className="max-w-lg mx-auto bg-yellow-500/5 border border-yellow-500/15 rounded-xl px-5 py-4 text-left">
+            <p className="text-yellow-400/90 text-xs font-semibold flex items-center gap-1.5 mb-1">
+              <AlertTriangle className="w-3.5 h-3.5" />
+              Disclaimer
+            </p>
+            <p className="text-slate-400 text-xs leading-relaxed">
+              This is not an official government website. We do not provide any services directly. We only help you discover and navigate official resources.
+            </p>
+          </div>
+
+          {/* Bottom line */}
+          <div className="pt-3 border-t border-slate-800/60 space-y-1">
+            <p className="text-slate-600 text-xs">
+              Made for Telangana citizens
+            </p>
+            <p className="text-slate-600 text-xs">
+              &copy; {new Date().getFullYear()} T-Sahaya. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

@@ -104,16 +104,20 @@ def update_portal_data(soup: BeautifulSoup) -> bool:
     old_svc_names   = {i.get("name", "")  for i in existing.get("services", [])}
     new_svc_names   = {i.get("name", "")  for i in new_services}
 
-    if old_news_titles == new_news_titles and old_svc_names == new_svc_names:
-        print("[Scout] Portal: no changes detected in news/services.")
-        return False
+    content_changed = not (old_news_titles == new_news_titles and old_svc_names == new_svc_names)
 
-    existing["latestNews"]  = new_news
-    existing["services"]    = new_services
+    if content_changed:
+        existing["latestNews"]  = new_news
+        existing["services"]    = new_services
+        print(f"[Scout] Portal: content changes detected — updating news/services.")
+    else:
+        print("[Scout] Portal: no changes detected in news/services.")
+
+    # Always update the timestamp so the UI shows the last scrape time
     existing["lastUpdated"] = now_iso()
     with open(DATA_FILE, "w", encoding="utf-8") as f:
         json.dump(existing, f, ensure_ascii=False, indent=2)
-    print(f"[Scout] Portal: public/data.json updated.")
+    print(f"[Scout] Portal: public/data.json timestamp updated.")
     return True
 
 
