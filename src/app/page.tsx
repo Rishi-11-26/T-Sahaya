@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Search, ShieldCheck, FileText, ArrowRight, Activity, RefreshCw, Info, AlertTriangle } from "lucide-react";
+import { Search, ShieldCheck, FileText, ArrowRight, Activity, Info, AlertTriangle } from "lucide-react";
 import LogStream, { LogMessage } from "@/components/LogStream";
 type Lang = "English" | "Hindi" | "Telugu";
 
@@ -55,28 +55,6 @@ export default function Home() {
   const [logs, setLogs] = useState<LogMessage[]>([]);
   const [result, setResult] = useState<string[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [lastVerified, setLastVerified] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetch("/data.json")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data?.lastUpdated) {
-          const date = new Date(data.lastUpdated);
-          setLastVerified(
-            date.toLocaleDateString("en-IN", {
-              day: "2-digit",
-              month: "short",
-              year: "numeric",
-              hour: "2-digit",
-              minute: "2-digit",
-              timeZone: "Asia/Kolkata",
-            })
-          );
-        }
-      })
-      .catch(() => {/* silently ignore — data.json may not exist locally */});
-  }, []);
 
   const t = translations[language];
 
@@ -186,15 +164,6 @@ export default function Home() {
           >
             Built for Telangana citizens
           </motion.p>
-
-          {lastVerified && (
-            <div className="inline-flex items-center gap-1.5 mt-5 px-3 py-1 bg-green-500/10 border border-green-500/20 rounded-full">
-              <RefreshCw className="w-3 h-3 text-green-400" />
-              <span className="text-xs text-green-400 font-medium">
-                Last Verified: {lastVerified} IST
-              </span>
-            </div>
-          )}
         </div>
       </section>
 

@@ -109,16 +109,15 @@ def update_portal_data(soup: BeautifulSoup) -> bool:
     if content_changed:
         existing["latestNews"]  = new_news
         existing["services"]    = new_services
+        existing["lastUpdated"] = now_iso()
         print(f"[Scout] Portal: content changes detected — updating news/services.")
+        with open(DATA_FILE, "w", encoding="utf-8") as f:
+            json.dump(existing, f, ensure_ascii=False, indent=2)
+        print(f"[Scout] Portal: public/data.json updated.")
+        return True
     else:
         print("[Scout] Portal: no changes detected in news/services.")
-
-    # Always update the timestamp so the UI shows the last scrape time
-    existing["lastUpdated"] = now_iso()
-    with open(DATA_FILE, "w", encoding="utf-8") as f:
-        json.dump(existing, f, ensure_ascii=False, indent=2)
-    print(f"[Scout] Portal: public/data.json timestamp updated.")
-    return True
+        return False
 
 
 # ─── Part 2: Scheme Eligibility Scraper ────────────────────────────────────────
@@ -258,10 +257,6 @@ def scrape_scheme_eligibility() -> bool:
             json.dump(config, f, ensure_ascii=False, indent=2)
         print("\n[Scout] schemes_eligibility.json updated with new values.")
     else:
-        # Still update lastUpdated to show the scrape ran
-        config["lastUpdated"] = now_iso()
-        with open(ELIGIBILITY_FILE, "w", encoding="utf-8") as f:
-            json.dump(config, f, ensure_ascii=False, indent=2)
         print("\n[Scout] schemes_eligibility.json: all values confirmed. No eligibility changes.")
 
     return changed
