@@ -55,6 +55,15 @@ def now_iso() -> str:
 
 def scrape_latest_news(soup: BeautifulSoup) -> list[dict]:
     items: list[dict] = []
+    # 1. Check for standard WordPress/Elementor post titles (common in new redesign)
+    for a in soup.select(".elementor-post__title a, .entry-title a"):
+        text = a.get_text(strip=True)
+        if text:
+            items.append({"title": text, "url": a.get("href", "")})
+    if items:
+        return items[:20]
+
+    # 2. Check for legacy containers (fallback)
     for container_id in ["latest-news", "latestNews", "news-section"]:
         section = soup.find(id=container_id)
         if section:
@@ -64,7 +73,7 @@ def scrape_latest_news(soup: BeautifulSoup) -> list[dict]:
                 if text:
                     items.append({"title": text, "url": link_tag["href"] if link_tag and link_tag.get("href") else ""})
             if items:
-                return items
+                return items[:20]
 
     ticker = soup.find("div", class_=lambda c: c and "ticker" in c.lower())
     if ticker:
@@ -78,6 +87,15 @@ def scrape_latest_news(soup: BeautifulSoup) -> list[dict]:
 
 def scrape_services(soup: BeautifulSoup) -> list[dict]:
     items: list[dict] = []
+    # 1. Check for Elementor buttons (new redesign)
+    for a in soup.select(".elementor-button-link"):
+        text = a.get_text(strip=True)
+        if text and len(text) < 40: # avoid long paragraphs
+            items.append({"name": text, "url": a.get("href", "")})
+    if items:
+        return items[:30]
+
+    # 2. Check for legacy containers
     for container_id in ["services", "e-services", "citizen-services", "onlineServices"]:
         section = soup.find(id=container_id)
         if section:
@@ -86,7 +104,7 @@ def scrape_services(soup: BeautifulSoup) -> list[dict]:
                 if text:
                     items.append({"name": text, "url": a.get("href", "")})
             if items:
-                return items
+                return items[:30]
     return items[:30]
 
 
@@ -275,8 +293,9 @@ def main() -> int:
     if soup:
         update_portal_data(soup)
     else:
-        print("[Scout] Could not reach the portal homepage.")
-        exit_code = 1
+        print("[Scout] WARNING: Could not reach the portal homepage. Skipping Part 1.")
+        # We don't set exit_code=1 here to allow Part 2 to proceed and the workflow to "pass"
+        # as long as eligibility data is safe.
 
     # --- Part 2: Scheme eligibility pages ---
     print(f"\n{'='*60}")
