@@ -1,14 +1,14 @@
 {
-  "lastUpdated": "2026-05-02T11:41:10Z",
+  "lastUpdated": "2026-05-03T19:33:09Z",
   "note": "This file is auto-updated daily by scout_agent.py via GitHub Actions. Do not edit manually.",
   "schemes": {
     "maha_lakshmi": {
       "minAge": 18,
       "maxAge": 99,
-      "eligibilityLimit": 200000,
+      "eligibilityLimit": 1000000,
       "ageNote": "Applicant must be 18 years or above.",
       "sourceUrl": "https://www.telangana.gov.in/government-initiatives/",
-      "lastVerified": "2026-05-02T00:00:00Z"
+      "lastVerified": "2026-05-03T19:32:30Z"
     },
     "rythu_bandhu": {
       "minAge": 18,
@@ -24,7 +24,7 @@
       "eligibilityLimit": 1000000,
       "ageNote": "Applicant must be 18 years or above (head of household).",
       "sourceUrl": "https://www.telangana.gov.in/government-initiatives/",
-      "lastVerified": "2026-05-02T11:41:01Z"
+      "lastVerified": "2026-05-03T19:32:47Z"
     },
     "epass": {
       "minAge": 16,
@@ -32,7 +32,7 @@
       "eligibilityLimit": 200000,
       "ageNote": "Student must be between 16 and 35 years of age depending on the course level.",
       "sourceUrl": "https://telanganaepass.cgg.gov.in/",
-      "lastVerified": "2026-05-02T11:41:04Z"
+      "lastVerified": "2026-05-03T19:32:48Z"
     },
     "aasara": {
       "minAge": 18,
@@ -72,7 +72,7 @@
       "eligibilityLimit": 1000000,
       "ageNote": "Pregnant women must be between 18 and 45 years of age.",
       "sourceUrl": "https://www.telangana.gov.in/government-initiatives/",
-      "lastVerified": "2026-05-02T11:41:07Z"
+      "lastVerified": "2026-05-03T19:33:06Z"
     },
     "indiramma_indlu": {
       "minAge": 18,
@@ -80,7 +80,7 @@
       "eligibilityLimit": 200000,
       "ageNote": "Applicant must be 18 years or above and must be from a BPL family.",
       "sourceUrl": "https://indirammaindlu.telangana.gov.in/",
-      "lastVerified": "2026-05-02T11:41:08Z"
+      "lastVerified": "2026-05-03T19:33:07Z"
     },
     "kanti_velugu": {
       "minAge": 0,
@@ -112,7 +112,7 @@
       "eligibilityLimit": 9999999,
       "ageNote": "Applicant must be a practicing weaver, 18 years or above.",
       "sourceUrl": "https://www.cheyutha.telangana.gov.in/",
-      "lastVerified": "2026-05-02T11:41:10Z"
+      "lastVerified": "2026-05-03T19:33:09Z"
     }
   }
 }
